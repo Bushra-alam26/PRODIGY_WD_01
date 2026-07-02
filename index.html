@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Navigation - Responsive Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* ============ Navigation Styles ============ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Navbar changes on scroll */
+        nav.scrolled {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 5px 20px rgba(110, 112, 122, 0.4);
+            height: 65px;
+            padding: 0 40px;
+        }
+
+        nav.scrolled .logo {
+            color: #251a1a;
+            font-weight: bold;
+        }
+
+        /* Logo */
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #916d6d;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+        }
+
+        /* Hover effect for nav items */
+        .nav-menu a:hover {
+            color: #343c61;
+            transform: translateY(-2px);
+        }
+
+        /* Underline animation on hover */
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Change text color when scrolled */
+        nav.scrolled .nav-menu a {
+            color: #fff;
+        }
+
+        nav.scrolled .nav-menu a:hover {
+            color: #fff;
+            opacity: 0.8;
+        }
+
+        /* CTA Button */
+        .cta-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            padding: 10px 25px !important;
+            border-radius: 25px;
+            font-size: 14px !important;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .cta-btn::after {
+            display: none;
+        }
+
+        /* Mobile Menu Toggle */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        nav.scrolled .hamburger span {
+            background-color: #321717;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* ============ Main Content Styles ============ */
+        main {
+            margin-top: 70px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hero-content h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            animation: slideDown 0.8s ease;
+        }
+
+        .hero-content p {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: slideUp 0.8s ease 0.2s both;
+        }
+
+        .hero-content .cta-btn {
+            display: inline-block;
+            background: white;
+            color: #667eea !important;
+            padding: 15px 40px !important;
+            font-size: 16px !important;
+            margin-top: 20px;
+            animation: slideUp 0.8s ease 0.4s both;
+        }
+
+        .hero-content .cta-btn:hover {
+            background: #f0f0f0;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            background-color: #f8f9ff;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 20px;
+            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #333;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        .about-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .about-text p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 20px;
+            background: #f8f9ff;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 60px auto 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .testimonial-text {
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* ============ Modal Styles ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 50px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            background: #f8f9ff;
+            color: #333;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .user-panel {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-panel button {
+            border: 1px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-panel button:hover {
+            background: rgba(102, 126, 234, 0.08);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #667eea;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            display: none;
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .error-message {
+            display: none;
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ============ Contact Form Section ============ */
+        .contact-section {
+            padding: 100px 20px;
+            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 60px auto 0;
+        }
+
+        /* ============ Responsive Design ============ */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 20px;
+                height: 60px;
+            }
+
+            nav.scrolled {
+                height: 60px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: absolute;
+                top: 60px;
+                left: 0;
+                flex-direction: column;
+                background-color: rgba(255, 255, 255, 0.98);
+                width: 100%;
+                text-align: center;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            nav.scrolled .nav-menu {
+                background-color: rgba(102, 126, 234, 0.98);
+            }
+
+            .nav-menu.active {
+                max-height: 400px;
+            }
+
+            .nav-menu li {
+                padding: 20px 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-menu.active a {
+                color: #667eea;
+            }
+
+            nav.scrolled .nav-menu.active a {
+                color: white;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .hero-content p {
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .about-text h2 {
+                font-size: 28px;
+            }
+
+            .features {
+                padding: 60px 20px;
+            }
+
+            .testimonials {
+                padding: 60px 20px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 30px;
+            }
+
+            .contact-section {
+                padding: 60px 20px;
+            }
+
+            .contact-form {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                height: 50px;
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .hero-content h1 {
+                font-size: 28px;
+            }
+
+            .hero-content p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .features-grid {
+                gap: 20px;
+            }
+
+            .feature-card {
+                padding: 25px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 25px;
+            }
+
+            .modal-content h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="logo">📄 Landing Page</div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><button class="cta-btn" onclick="handleCtaClick()" style="border: none; cursor: pointer;">Get Started</button></li>
+        </ul>
+        <div class="user-panel" id="userPanel"></div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Welcome to Our Platform</h1>
+                <p>Experience the future of interactive design with smooth animations and responsive layouts</p>
+                <button class="cta-btn open-modal" onclick="openModal()">Explore Features</button>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2 class="section-title">Our Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Fast Performance</h3>
+                    <p>Optimized for speed and efficiency, providing a seamless user experience across all devices.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Beautiful Design</h3>
+                    <p>Modern and responsive design that looks amazing on desktop, tablet, and mobile devices.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Interactive Elements</h3>
+                    <p>Smooth animations and hover effects that engage users and enhance user experience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Built with best practices for security and reliability to protect your data.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Fully Responsive</h3>
+                    <p>Works perfectly on all screen sizes with adaptive layouts and touch-friendly interactions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>24/7 Support</h3>
+                    <p>Dedicated support team ready to help you succeed with our platform.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Crafted with ❤️ for You</h2>
+                    <p>Our platform is designed with a focus on user experience and modern web standards. We believe in creating beautiful, functional, and responsive web applications that work seamlessly across all devices.</p>
+                    <p>With our interactive navigation menu and dynamic styling, you can create engaging landing pages that capture your audience's attention and keep them engaged.</p>
+                    <p>Whether you're building a portfolio, a business website, or a product landing page, our components and patterns provide a solid foundation for your next project.</p>
+                </div>
+                <div class="about-image">
+                    <span>� NextGen Platform</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials" id="testimonials">
+            <h2 class="section-title">What People Say</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"This platform has transformed how I build landing pages. The interactive navigation is smooth and the animations are beautiful!"</p>
+                    <p class="testimonial-author">- Sarah Johnson</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"The responsive design works perfectly on all devices. My clients are impressed with the professional look and feel."</p>
+                    <p class="testimonial-author">- Mike Chen</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Easy to customize and implement. The hover effects and scroll animations really engage my visitors."</p>
+                    <p class="testimonial-author">- Emma Davis</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-form">
+                <form id="contactForm" onsubmit="submitContactForm(event)">
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="success-message" id="successMessage">Thank you! We'll get back to you soon.</div>
+                    
+                    <div class="form-group">
+                        <label for="contactName">Full Name</label>
+                        <input type="text" id="contactName" name="name" required placeholder="Your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address</label>
+                        <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactPhone">Phone Number</label>
+                        <input type="tel" id="contactPhone" name="phone" placeholder="+1 (555) 000-0000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="message" required placeholder="Tell us what you're interested in..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Auth Modal -->
+        <div id="authModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <div class="modal-tabs">
+                    <button type="button" id="signupTab" class="tab-btn active" onclick="showAuthForm('signup')">Create Account</button>
+                    <button type="button" id="loginTab" class="tab-btn" onclick="showAuthForm('login')">Log In</button>
+                </div>
+                <h2 id="authTitle">🚀 Get Started Today</h2>
+                <p id="authInfoText" class="auth-info">Create your free account and get started.</p>
+
+                <div class="error-message" id="authError"></div>
+                <div class="success-message" id="authSuccess"></div>
+
+                <form id="signupForm" onsubmit="submitSignupForm(event)">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="John">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required placeholder="Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" name="email" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="At least 8 characters">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+
+                <form id="loginForm" class="hidden" onsubmit="submitLoginForm(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" name="email" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="submit-btn">Log In</button>
+                </form>
+
+                <p style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;" id="authSwitchText">
+                    Already have an account? <a href="#" onclick="showAuthForm('login'); return false;" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Interactive Landing Page. Built with HTML, CSS & JavaScript. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Get elements
+        const navbar = document.getElementById('navbar');
+        const navMenu = document.getElementById('navMenu');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        const authModal = document.getElementById('authModal');
+        const userPanel = document.getElementById('userPanel');
+        const authError = document.getElementById('authError');
+        const authSuccess = document.getElementById('authSuccess');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const authTitle = document.getElementById('authTitle');
+        const authInfoText = document.getElementById('authInfoText');
+        const authSwitchText = document.getElementById('authSwitchText');
+        const signupTab = document.getElementById('signupTab');
+        const loginTab = document.getElementById('loginTab');
+
+        // ============ MODAL FUNCTIONS ============
+        function handleCtaClick() {
+            const user = getCurrentUser();
+            if (user) {
+                alert(`You are already logged in as ${user.firstName}.`);
+                return;
+            }
+            openAuthModal('signup');
+        }
+
+        function openAuthModal(defaultForm = 'signup') {
+            showAuthForm(defaultForm);
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            authModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            resetAuthForms();
+        }
+
+        function resetAuthForms() {
+            signupForm.reset();
+            loginForm.reset();
+            authError.classList.remove('show');
+            authSuccess.classList.remove('show');
+        }
+
+        function showAuthForm(mode) {
+            authError.classList.remove('show');
+            authSuccess.classList.remove('show');
+
+            if (mode === 'login') {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                signupTab.classList.remove('active');
+                loginTab.classList.add('active');
+                authTitle.textContent = 'Welcome Back';
+                authInfoText.textContent = 'Log in to continue to your account.';
+                authSwitchText.innerHTML = 'Don\'t have an account? <a href="#" onclick="showAuthForm(\'signup\'); return false;" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign Up</a>';
+            } else {
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                signupTab.classList.add('active');
+                loginTab.classList.remove('active');
+                authTitle.textContent = '🚀 Get Started Today';
+                authInfoText.textContent = 'Create your free account and get started.';
+                authSwitchText.innerHTML = 'Already have an account? <a href="#" onclick="showAuthForm(\'login\'); return false;" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign In</a>';
+            }
+        }
+
+        function getAccounts() {
+            return JSON.parse(localStorage.getItem('accounts') || '{}');
+        }
+
+        function saveAccounts(accounts) {
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+        }
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('currentUser') || 'null');
+        }
+
+        function setCurrentUser(user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            updateUserPanel();
+        }
+
+        function clearCurrentUser() {
+            localStorage.removeItem('currentUser');
+            updateUserPanel();
+        }
+
+        function updateUserPanel() {
+            const user = getCurrentUser();
+            if (user) {
+                userPanel.style.display = 'flex';
+                userPanel.innerHTML = `<span>Welcome, ${user.firstName}</span><button type="button" onclick="logout()">Logout</button>`;
+            } else {
+                userPanel.style.display = 'none';
+                userPanel.innerHTML = '';
+            }
+        }
+
+        function logout() {
+            clearCurrentUser();
+            openAuthModal('login');
+            authSuccess.textContent = 'You have been logged out. Please sign in to continue.';
+            authSuccess.classList.add('show');
+        }
+
+        function initAuth() {
+            updateUserPanel();
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === authModal) {
+                closeModal();
+            }
+        });
+
+        // Initialize auth state on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+        });
+
+        // ============ FORM VALIDATION & SUBMISSION ============
+        function submitSignupForm(event) {
+            event.preventDefault();
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            authError.classList.remove('show');
+            authSuccess.classList.remove('show');
+
+            if (!firstName || !lastName) {
+                showError('Please enter your full name.', authError);
+                return;
+            }
+
+            if (firstName.length < 2 || lastName.length < 2) {
+                showError('Name must be at least 2 characters.', authError);
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address.', authError);
+                return;
+            }
+
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters.', authError);
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Passwords do not match.', authError);
+                return;
+            }
+
+            const accounts = getAccounts();
+            if (accounts[email]) {
+                showError('This account already exists. Please log in.', authError);
+                showAuthForm('login');
+                return;
+            }
+
+            accounts[email] = {
+                firstName,
+                lastName,
+                email,
+                password,
+                createdAt: new Date().toISOString()
+            };
+            saveAccounts(accounts);
+            setCurrentUser(accounts[email]);
+
+            const submitBtn = event.target.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('_subject', `Welcome to our platform, ${firstName}!`);
+            formData.append('full_name', `${firstName} ${lastName}`);
+            formData.append('email', email);
+            formData.append('message', `Welcome ${firstName}! Your account has been created successfully.`);
+
+            fetch('https://formsubmit.co/bushraparveenalam3@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('✅ Account created! Welcome email sent!', {
+                    name: `${firstName} ${lastName}`,
+                    email,
+                    timestamp: new Date().toLocaleString()
+                });
+            })
+            .catch(error => {
+                console.log('⚠️ Email service unavailable, account still created.');
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                authSuccess.textContent = 'Account created and logged in successfully!';
+                authSuccess.classList.add('show');
+
+                setTimeout(() => {
+                    closeModal();
+                }, 1500);
+            });
+        }
+
+        function submitLoginForm(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            authError.classList.remove('show');
+            authSuccess.classList.remove('show');
+
+            const accounts = getAccounts();
+            const account = accounts[email];
+
+            if (!account) {
+                showError('Account not found. Please sign up first.', authError);
+                showAuthForm('signup');
+                return;
+            }
+
+            if (account.password !== password) {
+                showError('Incorrect password. Please try again.', authError);
+                return;
+            }
+
+            setCurrentUser(account);
+            authSuccess.textContent = 'Logged in successfully!';
+            authSuccess.classList.add('show');
+
+            setTimeout(() => {
+                closeModal();
+            }, 1200);
+        }
+
+        function submitContactForm(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+
+            // Reset messages
+            errorDiv.classList.remove('show');
+            successDiv.classList.remove('show');
+
+            // Validation
+            if (!name || !email || !message) {
+                showError('Please fill in all required fields', errorDiv);
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address', errorDiv);
+                return;
+            }
+
+            if (message.length < 10) {
+                showError('Message must be at least 10 characters', errorDiv);
+                return;
+            }
+
+            const submitBtn = event.target.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            // Send email using FormSubmit.co (completely free, no setup)
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('message', message);
+            formData.append('_subject', `New Contact Form Submission from ${name}`);
+            formData.append('_captcha', 'false');
+
+            fetch('https://formspree.io/f/xyzgwkrq', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Email sent successfully!', {
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        message: message,
+                        timestamp: new Date().toLocaleString()
+                    });
+                    
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    successDiv.classList.add('show');
+
+                    // Reset form after 2 seconds
+                    setTimeout(() => {
+                        document.getElementById('contactForm').reset();
+                        successDiv.classList.remove('show');
+                    }, 2000);
+                } else {
+                    throw new Error('Formspree failed');
+                }
+            })
+            .catch(error => {
+                console.log('Trying alternative service...');
+                
+                // Fallback: Use FormSubmit alternative
+                const formDataAlt = new FormData();
+                formDataAlt.append('name', name);
+                formDataAlt.append('email', email);
+                formDataAlt.append('phone', phone);
+                formDataAlt.append('message', message);
+
+                fetch('https://formsubmit.co/bushraparveenalam3@gmail.com', {
+                    method: 'POST',
+                    body: formDataAlt
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ Email sent via FormSubmit!', {
+                            name: name,
+                            email: email,
+                            phone: phone,
+                            message: message,
+                            timestamp: new Date().toLocaleString()
+                        });
+                        
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        successDiv.classList.add('show');
+
+                        setTimeout(() => {
+                            document.getElementById('contactForm').reset();
+                            successDiv.classList.remove('show');
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.error('Both services failed:', err);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    showError('Email service temporarily unavailable. Your message has been saved locally.', errorDiv);
+                    
+                    // Save to localStorage as backup
+                    const savedMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+                    savedMessages.push({
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        message: message,
+                        timestamp: new Date().toLocaleString()
+                    });
+                    localStorage.setItem('contactMessages', JSON.stringify(savedMessages));
+                    console.log('Message saved locally:', savedMessages);
+                });
+            });
+        }
+
+        function showError(message, errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        // ============ SCROLL & NAVIGATION ============
+        // Scroll event - change navbar appearance
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Hamburger menu toggle
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+            const isClickInside = navbar.contains(event.target);
+            if (!isClickInside && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll indicators
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.style.color = '';
+                    });
+                    const activeLink = document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
+                    if (activeLink) {
+                        activeLink.style.color = '#667eea';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
